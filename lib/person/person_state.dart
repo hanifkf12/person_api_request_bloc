@@ -17,3 +17,9 @@ class PersonLoaded extends PersonState{
 
   PersonLoaded(this.person) : super([person]);
 }
+
+class PersonAdded extends PersonState{
+  bool status;
+
+  PersonAdded(this.status) : super([status]);
+}

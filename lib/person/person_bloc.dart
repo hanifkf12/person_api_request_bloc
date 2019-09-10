@@ -17,6 +17,10 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       yield PersonLoading();
       Person person = await _repository.fetchPersons();
       yield PersonLoaded(person);
+    }else if(event is CreatePerson){
+      yield PersonLoading();
+      bool status = await _repository.createPersons(event.savePerson);
+      yield PersonAdded(status);
     }
   }
 }

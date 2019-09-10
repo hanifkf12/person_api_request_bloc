@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:person_api_request_bloc/person.dart';
 import 'package:person_api_request_bloc/person/bloc.dart';
 import 'package:person_api_request_bloc/person/person_bloc.dart';
+import 'package:person_api_request_bloc/seocnd_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: BlocProvider<PersonBloc>(
-          builder: (context) => PersonBloc(),
+          builder: (context) => PersonBloc()..dispatch(GetPersons()),
           child: MyHomePage(title: 'API BLOC')),
     );
   }
@@ -35,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final personBloc = BlocProvider.of<PersonBloc>(context);
-    personBloc.dispatch(GetPersons());
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -51,7 +52,19 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
           ),
-        ) // This trailing comma makes auto-formatting nicer for build methods.
+        ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context){
+              return SecondPage();
+            }
+          )).then((value){
+            personBloc.dispatch(GetPersons());
+          });
+        },
+      ),
         );
   }
 
@@ -64,12 +77,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget buildList(Person person) {
     return ListView.builder(
       itemBuilder: (builder, index) {
-        return ListTile(
-          title: Text(person.result[index].firstName),
-          subtitle: Text(person.result[index].lastName),
+        return Card(
+          child: ListTile(
+            title: Text(person.result[index].firstName),
+            subtitle: Text(person.result[index].lastName),
+          ),
         );
       },
       itemCount: person.count,
+//      separatorBuilder: (context, index) {
+//        return Divider();
+//      },
     );
   }
 }
